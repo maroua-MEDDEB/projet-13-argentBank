@@ -8,12 +8,14 @@ import Footer from "./components/Footer";
 import { Routes, Route } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import UserInfos from "./pages/UserInfos";
+import Language from "./pages/Language";
+import Buttons from "./pages/Buttons";
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Buttons />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/userInfos" element={<UserInfos />} />
       </Routes>
