@@ -1,31 +1,29 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
-import { loginUser } from "../redux/slices/authSlice";
-
-import { useDispatch } from "react-redux";
-
-function SignIn() {
+function SignUp() {
   const [data, setData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
 
-  const dispatch = useDispatch();
-
-  // cartouche + pistolet
-  function handleLogin(e) {
+  function handleRegister(e) {
     // bloquer l'action par default de balise <form> </form> cest le refresh !
     e.preventDefault();
-
-    dispatch(loginUser(data));
+    axios
+      .post("http://localhost:3001/api/v1/user/register", data)
+      .then((result) => {
+        console.log(result.data);
+      });
   }
   return (
     <main className="main bg-dark">
       <section className="sign-in-content">
         <i className="fa fa-user-circle sign-in-icon"></i>
         <h1>Sign In</h1>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleRegister}>
           <div className="input-wrapper">
             <label for="username">email</label>
             <input
@@ -56,4 +54,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignUp;
