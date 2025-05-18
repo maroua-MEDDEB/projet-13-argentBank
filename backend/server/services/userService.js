@@ -63,7 +63,7 @@ module.exports.loginUser = async (serviceData) => {
 
     const token = jwt.sign(
       { id: user._id },
-      process.env.SECRET_KEY || "default-secret-key",
+      process.env.SECRET_KEY || "marouaregaya",
       { expiresIn: "1d" }
     );
     let msg = "User successfully logged in";

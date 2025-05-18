@@ -7,11 +7,11 @@ module.exports.validateToken = (req, res, next) => {
     if (!req.headers.authorization) {
       throw new Error("Token is missing from header");
     }
-
-    const userToken = req.headers.authorization.split("Bearer")[1].trim();
+    //req.headers.authrorisation  = "bearer fdf.fdfd.dfdf"
+    const userToken = req.headers.authorization.split(" ")[1].trim();
     const decodedToken = jwt.verify(
       userToken,
-      process.env.SECRET_KEY || "default-secret-key"
+      process.env.SECRET_KEY || "marouaregaya"
     );
     return next();
   } catch (error) {

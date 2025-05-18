@@ -11,6 +11,28 @@ import axios from "axios";
 */
 
 // createAsyncThunk : permet d'extraire les 3 etats d'une requete
+
+export const updateUser = createAsyncThunk(
+  "auth/updateUser",
+  async (data, thunkAPI) => {
+    try {
+      let result = await axios.put(
+        "http://localhost:3001/api/v1/user/profile",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        }
+      );
+      console.log(result.data);
+      return result.data.body;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (data, thunkAPI) => {
@@ -80,6 +102,24 @@ const authSlice = createSlice({
         }
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.error;
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.msg = null;
+      })
+      // action.payload == res.body
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.error) {
+          state.error = action.payload.error;
+        } else {
+          state.user = action.payload;
+        }
+      })
+      .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.error;
       })

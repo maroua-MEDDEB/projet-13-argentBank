@@ -66,3 +66,24 @@ module.exports.updateUserProfile = async (req, res) => {
 
   return res.status(response.status).send(response);
 };
+
+/*
+async function delta () {
+
+let user = await axios.get('http:/sdsdsdsd.dsd)
+
+console.log(user)
+}
+-------------- function delta () {
+
+  axios.get('http:/sdsdsdsd.dsd).then(result=>{
+    console.log(user)
+    })
+
+
+}
+
+
+
+
+*/
