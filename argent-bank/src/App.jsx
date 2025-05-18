@@ -8,16 +8,26 @@ import Footer from "./components/Footer";
 import { Routes, Route } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import UserInfos from "./pages/UserInfos";
-import Language from "./pages/Language";
-import Buttons from "./pages/Buttons";
+import SignUp from "./pages/SignUp";
+import { ToastContainer } from "react-toastify";
+import PrivateRoutes from "./layout/PrivateRoutes";
 function App() {
   return (
     <>
-      <Navbar />
+      <ToastContainer /> <Navbar />
       <Routes>
-        <Route path="/" element={<Buttons />} />
+        <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/userInfos" element={<UserInfos />} />
+        <Route path="/signup" element={<SignUp />} />
+
+        <Route
+          path="/userInfos"
+          element={
+            <PrivateRoutes>
+              <UserInfos />
+            </PrivateRoutes>
+          }
+        />
       </Routes>
       <Footer />
     </>

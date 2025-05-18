@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { loginUser } from "../redux/slices/authSlice";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 function SignIn() {
   const [data, setData] = useState({
@@ -12,14 +13,27 @@ function SignIn() {
   });
 
   const dispatch = useDispatch();
-
+  const { msg, error } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   // cartouche + pistolet
   function handleLogin(e) {
     // bloquer l'action par default de balise <form> </form> cest le refresh !
     e.preventDefault();
-
     dispatch(loginUser(data));
   }
+
+  useEffect(() => {
+    if (msg != null) {
+      toast.success(msg);
+      setTimeout(() => {
+        navigate("/userInfos");
+      }, 2500); // 2.5 sec
+    }
+    if (error != "") {
+      toast.error(error);
+    }
+  }, [error, msg]);
+
   return (
     <main className="main bg-dark">
       <section className="sign-in-content">
