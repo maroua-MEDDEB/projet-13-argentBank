@@ -1,9 +1,9 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: Bank Argent API documentation
   description: Contains all available API endpoints in this codebase
-  version: '1.0.0'
-  termsOfService: 'http://swagger.io/terms/'
+  version: "1.0.0"
+  termsOfService: "http://swagger.io/terms/"
 host: localhost:3001
 basePath: /api/v1
 schemes:
@@ -21,18 +21,19 @@ paths:
           description: Login Payload
           required: true
           schema:
-            $ref: '#/definitions/Login'
+            $ref: "#/definitions/Login"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Login Successfully
           schema:
-            $ref: '#/definitions/LoginResponse'
-        '400':
+            $ref: "#/definitions/LoginResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
+
   /user/signup:
     post:
       tags:
@@ -45,18 +46,19 @@ paths:
           description: Signup Payload
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: "#/definitions/User"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Signup Successfully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
+
   /user/profile:
     post:
       security:
@@ -73,14 +75,15 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: User profile retrieved successully
+        "200":
+          description: User profile retrieved successfully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
+
     put:
       security:
         - Bearer: []
@@ -98,23 +101,143 @@ paths:
           description: Update user profile attributes
           required: true
           schema:
-            $ref: '#/definitions/UserProfile'
+            $ref: "#/definitions/UserProfile"
       produces:
         - application/json
       responses:
-        '200':
-          description: User profile retrieved successully
+        "200":
+          description: User profile updated successfully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
+
+  /transactions:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Liste des transactions groupées par compte
+      description: Récupère toutes les transactions du mois en cours, groupées par compte
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Transactions groupées par compte
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CompteTransactions"
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Ajouter une transaction
+      description: Ajoute une nouvelle transaction
+      parameters:
+        - in: body
+          name: body
+          description: Détails de la transaction à ajouter
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionInput"
+      produces:
+        - application/json
+      responses:
+        "201":
+          description: Transaction créée avec succès
+        "400":
+          description: Invalid Fields
+        "500":
+          description: Internal Server Error
+
+  /transactions/{id}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Détail d'une transaction
+      description: Affiche les détails d'une transaction par son ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: ID de la transaction
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Détails de la transaction
+          schema:
+            $ref: "#/definitions/Transaction"
+        "404":
+          description: Transaction non trouvée
+        "500":
+          description: Internal Server Error
+
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Modifier une transaction
+      description: Met à jour les informations d'une transaction existante
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Données mises à jour
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionInput"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Transaction mise à jour
+        "400":
+          description: Invalid Fields
+        "500":
+          description: Internal Server Error
+
+    delete:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Supprimer une transaction
+      description: Supprime une transaction par ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        "204":
+          description: Transaction supprimée
+        "500":
+          description: Internal Server Error
+
 securityDefinitions:
   Bearer:
     type: apiKey
     name: Authorization
     in: header
+
 definitions:
   User:
     properties:
@@ -130,6 +253,7 @@ definitions:
       lastName:
         type: string
         description: user last name
+
   Login:
     properties:
       email:
@@ -138,6 +262,7 @@ definitions:
       password:
         type: string
         description: user password
+
   ApiResponse:
     type: object
     properties:
@@ -152,11 +277,13 @@ definitions:
             type: string
           email:
             type: string
+
   LoginResponse:
     type: object
     properties:
       token:
         type: string
+
   UserProfile:
     type: object
     properties:
@@ -164,3 +291,50 @@ definitions:
         type: string
       lastName:
         type: string
+
+  Transaction:
+    type: object
+    properties:
+      id:
+        type: string
+      date:
+        type: string
+        format: date
+      montant:
+        type: number
+        format: float
+      description:
+        type: string
+      compte_id:
+        type: string
+
+  TransactionInput:
+    type: object
+    required:
+      - date
+      - montant
+      - description
+      - compte_id
+    properties:
+      date:
+        type: string
+        format: date
+      montant:
+        type: number
+        format: float
+      description:
+        type: string
+      compte_id:
+        type: string
+
+  CompteTransactions:
+    type: object
+    properties:
+      compte_id:
+        type: string
+      compte_nom:
+        type: string
+      transactions:
+        type: array
+        items:
+          $ref: "#/definitions/Transaction"
